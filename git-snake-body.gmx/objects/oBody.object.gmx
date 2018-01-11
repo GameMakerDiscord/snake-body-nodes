@@ -26,17 +26,28 @@
           <argument>
             <kind>1</kind>
             <string>//Constants
+//These enums are used to store data within the node array
+/*
+xpos = x position
+ypos = y position
+dir = node's direction (where it is facing)
+width = width of the body at that node
+p0x, p0y = first edge coordinates at the body
+p1x, p1y = second edge coordinates at the body
+*/
 enum pr{ 
     xpos, ypos, dir, width, p0x, p0y, p1x, p1y
 }
 
 //Vars
-nodes = 32;
-node_dist = 8;
+nodes = 32; //Total number of nodes
+node_dist = 8; //Distance between each node
+               //Less distance = more quality, but shorter length
 
-debug = false;
+debug = true; //Whether or not to debug the body/nodes
 
 //Array
+//Initializes all the nodes with their properties
 for(var i=0; i&lt;nodes; i++){ 
     body[i, pr.xpos] = x - node_dist*i; 
     body[i, pr.ypos] = y; 
@@ -71,6 +82,7 @@ for(var i=0; i&lt;nodes; i++){
           <argument>
             <kind>1</kind>
             <string>//Movement
+//Points &amp; moves the first node towards the mouse, if LMB is pressed
 var mDir = point_direction(body[0, pr.xpos], body[0, pr.ypos], mouse_x, mouse_y);
 
 body[0, pr.dir] = mDir;
@@ -78,6 +90,10 @@ body[0, pr.xpos] += lengthdir_x(mouse_check_button(mb_left) * 4, mDir);
 body[0, pr.ypos] += lengthdir_y(mouse_check_button(mb_left) * 4, mDir);
 
 //Nodes
+//This loop starts from the second node.
+//Each node faces the node before it (node-1).
+//Each node is placed 'node_dist' distance away
+//from the previous node.
 for(var i=1; i&lt;nodes; i++){
     body[i, pr.dir] = point_direction(body[i, pr.xpos], body[i, pr.ypos], body[i-1, pr.xpos], body[i-1, pr.ypos]);
 
@@ -86,12 +102,14 @@ for(var i=1; i&lt;nodes; i++){
 }
 
 //Edges
+//Calculates the edges at each node,
+//according to its width
 for(var i=0; i&lt;nodes; i++){
- body[i, pr.p0x] = body[i, pr.xpos] + lengthdir_x(body[i, pr.width]/2, body[i, pr.dir]-90);
- body[i, pr.p0y] = body[i, pr.ypos] + lengthdir_y(body[i, pr.width]/2, body[i, pr.dir]-90);
+    body[i, pr.p0x] = body[i, pr.xpos] + lengthdir_x(body[i, pr.width]/2, body[i, pr.dir]-90);
+    body[i, pr.p0y] = body[i, pr.ypos] + lengthdir_y(body[i, pr.width]/2, body[i, pr.dir]-90);
 
- body[i, pr.p1x] = body[i, pr.xpos] + lengthdir_x(body[i, pr.width]/2, body[i, pr.dir]+90);
- body[i, pr.p1y] = body[i, pr.ypos] + lengthdir_y(body[i, pr.width]/2, body[i, pr.dir]+90);
+    body[i, pr.p1x] = body[i, pr.xpos] + lengthdir_x(body[i, pr.width]/2, body[i, pr.dir]+90);
+    body[i, pr.p1y] = body[i, pr.ypos] + lengthdir_y(body[i, pr.width]/2, body[i, pr.dir]+90);
 }
 </string>
           </argument>
@@ -116,11 +134,16 @@ for(var i=0; i&lt;nodes; i++){
           <argument>
             <kind>1</kind>
             <string>//Draw with triangles
+//Loops through each node starting from the second
+//and draws triangles using 4 points:
+//2 edges of the current node, and 2 edges
+//of the previous node
 for(var i=1; i&lt;nodes; i++){
      draw_triangle(body[i-1, pr.p0x], body[i-1, pr.p0y], body[i-1, pr.p1x], body[i-1, pr.p1y], body[i, pr.p0x], body[i, pr.p0y], false);
      draw_triangle(body[i, pr.p1x], body[i, pr.p1y], body[i-1, pr.p1x], body[i-1, pr.p1y], body[i, pr.p0x], body[i, pr.p0y], false);
      
      //debug
+     //if debug is enabled, draws the skeleton of the body
      if (debug){
          //skeleton triangles
         draw_set_color(c_red);
