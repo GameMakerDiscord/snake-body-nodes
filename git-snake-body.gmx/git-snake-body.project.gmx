@@ -8,9 +8,15 @@
   <sprites name="sprites"/>
   <backgrounds name="background"/>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\body_collision.gml</script>
+  </scripts>
   <objects name="objects">
-    <object>objects\oTest</object>
+    <object>objects\oBody</object>
   </objects>
+  <rooms name="rooms">
+    <room>rooms\room0</room>
+  </rooms>
   <help>
     <rtf>help.rtf</rtf>
   </help>
