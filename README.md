@@ -1,5 +1,7 @@
 ## Snake body made up with nodes
 
+Maintained by: gurpreetsinghmatharoo
+
 ### [(Original Tutorial Link)](https://gdpalace.wordpress.com/2017/12/24/snake-nodes/)
 
 #### Example:
